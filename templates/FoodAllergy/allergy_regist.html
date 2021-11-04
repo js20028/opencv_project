@@ -11,6 +11,31 @@
     <input type="text" name="highLevelAllergy" id="highLevelAllergy"></input>
 
 <input type="submit" value="알러지등록">
+
+{% if allergy_list %}
+    <ul>
+        {% for allergy in allergy_list %}
+            {% if allergy.level == 1 %}
+                <li><a href="{% url 'FoodAllergy:showLv2' allergy.allergyName %}">{{ allergy.allergyName }}</a></li><br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>알러지가 없습니다.</p>
+{% endif %}
+    <br><br>
+
+{% if allergyName %}
+    <ul>
+        {% for allergy in allergy_list %}
+            {% if allergy.highLevelAllergy == allergyName.allergyName %}
+                {{ allergy.allergyName }}<br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>알러지가 없습니다.</p>
+{% endif %}
 </form>
 </body>
 </html>

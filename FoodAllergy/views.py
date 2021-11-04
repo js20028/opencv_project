@@ -22,18 +22,9 @@ def detail(request, allergy_id):
 
 
 def allergy_register(request):
-    """
-    pybo 알러지등록
-    """
-    #allergy = get_object_or_404(Allergy, pk=allergy_id)
-    #allergy.allergyName.create(allergyName=request.POST.get('allergyName'))
-
-    #allergy = Allergy.objects.get()
-    #context = {'allergy': allergy}
-    #a = Allergy(allergyName=request.POST.get('allergyName'), highLevelAllergy=request.POST.get('highLevelAllergy'),
-    #            level=request.POST.get('level'), myAllergy=request.POST.get('myAllergy'))
-    #a.save()
-    return render(request,'FoodAllergy/allergy_regist.html')
+    allergy_list = Allergy.objects.order_by()
+    context = {'allergy_list': allergy_list}
+    return render(request, 'FoodAllergy/allergy_regist.html', context)
 
 def regist(request):
 
@@ -50,3 +41,10 @@ def regist(request):
     a.save()
 
     return redirect('FoodAllergy:register')
+
+def showLv2(request, allergy_name):
+    allergy_list = Allergy.objects.order_by()
+    a = Allergy.objects.get(allergyName=allergy_name)
+    context = {'allergyName' : a, 'allergy_list': allergy_list}
+
+    return render(request, 'FoodAllergy/allergy_regist.html',context)
