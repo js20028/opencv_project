@@ -48,3 +48,17 @@ def showLv2(request, allergy_name):
     context = {'allergyName' : a, 'allergy_list': allergy_list}
 
     return render(request, 'FoodAllergy/allergy_regist.html',context)
+
+
+def addMyAllergy(request):
+    check = request.POST.getlist('checkAllergy[]')
+    allergy_list = Allergy.objects.order_by()
+    context = {'check':check, 'allergy_list': allergy_list}
+
+    for allergy in allergy_list:
+        for ck in check:
+            if ck == allergy.allergyName:
+                allergy.myAllergy = "Y"
+                allergy.save()
+
+    return render(request, 'FoodAllergy/allergy_regist.html',context)
