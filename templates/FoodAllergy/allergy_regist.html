@@ -47,6 +47,25 @@
         {{ allergy }} <br>
     {% endfor %}
 {% endif %}
+
+------------------------------------------<br>
+    *내 알러지*<br><br>
+    {% for allergy in allergy_list %}
+        {% if allergy.myAllergy == "Y" and allergy.level == 1 %}
+
+            {{ allergy.allergyName }}<br>
+
+            {% for allergy2 in allergy_list %}
+                    {% if allergy2.myAllergy == "Y" and allergy2.highLevelAllergy == allergy.allergyName %}
+                        {% if allergy2.level == 2 %}
+                            {{ allergy2.allergyName }}<br>
+                        {% endif %}
+                    {% endif %}
+            {% endfor %}
+            <br>
+        {% endif %}
+    {% endfor %}
+
 </form>
 </body>
 </html>
