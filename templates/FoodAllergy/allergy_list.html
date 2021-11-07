@@ -9,6 +9,14 @@
 <button onClick="location.href='{% url 'FoodAllergy:register' %}'">등록하기</button>
 <input type="button" value="버튼" onClick="location.href='allergy_regist.html'"/>
 
+<!--{% if messages %}-->
+<!--<ul class="messages">-->
+<!--    {% for message in messages %}-->
+<!--    <li {% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+<!--{% endif %}-->
+
 {% if allergy_list %}
     <ul>
     {% for allergy in allergy_list %}
