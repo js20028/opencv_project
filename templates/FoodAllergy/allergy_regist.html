@@ -30,12 +30,19 @@
 {% csrf_token %}
 {% if allergyName %}
     <ul>
-        {% for allergy in allergy_list %}
-            {% if allergy.highLevelAllergy == allergyName.allergyName %}
-                <label><input type="checkbox" name="checkAllergy[]" value={{allergy.allergyName}} > {{ allergy.allergyName }} </label>
-                <br>
-            {% endif %}
-        {% endfor %}
+        {% if count == 0 %}
+            {% for allergy in allergy_list %}
+                {% if allergy.highLevelAllergy == allergyName.allergyName %}
+                    <label><input type="checkbox" name="checkAllergy[]" value={{allergy.allergyName}} > {{ allergy.allergyName }} </label>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <label><input type="checkbox" name="checkAllergy[]" value={{allergyName.allergyName}} > {{ allergyName.allergyName }} </label>
+            <br>
+        {% endif %}
+
+
         <input type="submit" value="알러지 추가">
     </ul>
 {% else %}
