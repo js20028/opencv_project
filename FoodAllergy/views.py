@@ -173,6 +173,37 @@ def addMyAllergy(request):
 
 
 def deleteMyAllergy(request):
+    check = request.POST.getlist('checkAllergy[]')
     allergy_list = Allergy.objects.order_by()
-    context = {'allergy_list': allergy_list}
+
+    allergy_my = []
+
+    global find_high
+    print("find_high : " + find_high)
+
+
+    for allergy in allergy_list:
+        for ck in check:
+            if ck == allergy.allergyName:
+                if allergy.highLevelAllergy == find_high:
+                    allergy.myAllergy = "N"
+                    allergy.save()
+
+
+    allergy_list = Allergy.objects.order_by()
+
+    for allergy in allergy_list:
+        if allergy.highLevelAllergy == find_high:
+            allergy_my.append(allergy.myAllergy)
+
+    print(allergy_my)
+
+    if 'Y' not in allergy_my:
+        for allergy in allergy_list:
+           if allergy.allergyName == find_high:
+               allergy.myAllergy = "N"
+               allergy.save()
+
+    context = {'check': check, 'allergy_list': allergy_list}
+
     return render(request, 'FoodAllergy/allergy_regist.html', context)
