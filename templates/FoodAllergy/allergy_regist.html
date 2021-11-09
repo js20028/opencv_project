@@ -11,6 +11,7 @@
     <input type="text" name="highLevelAllergy" id="highLevelAllergy"></input>
 
 <input type="submit" value="알러지등록">
+</form>
 
 {% if allergy_list %}
     <ul>
@@ -20,11 +21,19 @@
             {% endif %}
         {% endfor %}
     </ul>
+{% elif allergy_list2 %}
+    <ul>
+        {% for allergy in allergy_list2 %}
+            {% if allergy.level == 1 %}
+                <li><a href="{% url 'FoodAllergy:showLv2' allergy.allergyName %}">{{ allergy.allergyName }}</a></li><br>
+            {% endif %}
+        {% endfor %}
+    </ul>
 {% else %}
     <p>알러지가 없습니다.</p>
 {% endif %}
     <br><br>
-</form>
+
 
 <form action="{% url 'FoodAllergy:addMyAllergy' %}" method="post">
 {% csrf_token %}
@@ -54,25 +63,52 @@
         {{ allergy }} <br>
     {% endfor %}
 {% endif %}
+</form>
 
 ------------------------------------------<br>
     *내 알러지*<br><br>
-    {% for allergy in allergy_list %}
-        {% if allergy.myAllergy == "Y" and allergy.level == 1 %}
+{% if allergy_list %}
+    <ul>
+        {% for allergy in allergy_list %}
+            {% if allergy.level == 1 and allergy.myAllergy == "Y" %}
+                <li><a href="{% url 'FoodAllergy:myShowLv2' allergy.allergyName %}">{{ allergy.allergyName }}</a></li><br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% elif allergy_list2 %}
+    <ul>
+        {% for allergy in allergy_list2 %}
+            {% if allergy.level == 1 and allergy.myAllergy == "Y" %}
+                <li><a href="{% url 'FoodAllergy:myShowLv2' allergy.allergyName %}">{{ allergy.allergyName }}</a></li><br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>알러지가 없습니다.</p>
+{% endif %}
 
-            {{ allergy.allergyName }}<br>
-
-            {% for allergy2 in allergy_list %}
-                    {% if allergy2.myAllergy == "Y" and allergy2.highLevelAllergy == allergy.allergyName %}
-                        {% if allergy2.level == 2 %}
-                            {{ allergy2.allergyName }}<br>
-                        {% endif %}
-                    {% endif %}
+<form action="{% url 'FoodAllergy:deleteMyAllergy' %}" method="post">
+{% csrf_token %}
+{% if allergyName2 %}
+    <ul>
+        {% if count2 == 0 %}
+            {% for allergy in allergy_list2 %}
+                {% if allergy.highLevelAllergy == allergyName2.allergyName and allergy.myAllergy == "Y" %}
+                    <label><input type="checkbox" name="checkAllergy[]" value={{allergy.allergyName}} > {{ allergy.allergyName }} </label>
+                    <br>
+                {% endif %}
             {% endfor %}
+        {% else %}
+            <label><input type="checkbox" name="checkAllergy[]" value={{allergyName.allergyName}} > {{ allergyName2.allergyName }} </label>
             <br>
         {% endif %}
-    {% endfor %}
 
+
+        <input type="submit" value="알러지 삭제">
+    </ul>
+{% else %}
+    <p>알러지가 없습니다.</p>
+{% endif %}
 </form>
 </body>
 </html>

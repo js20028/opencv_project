@@ -31,7 +31,9 @@ def detail(request, allergy_id):
 
 def allergy_register(request):
     allergy_list = Allergy.objects.order_by()
-    context = {'allergy_list': allergy_list}
+    allergy_list2 = Allergy.objects.order_by()
+
+    context = {'allergy_list': allergy_list, 'allergy_list2': allergy_list2}
     return render(request, 'FoodAllergy/allergy_regist.html', context)
 
 def regist(request):
@@ -115,6 +117,28 @@ def showLv2(request, allergy_name):
 
     return render(request, 'FoodAllergy/allergy_regist.html',context)
 
+def myShowLv2(request, allergy_name):
+    allergy_list = Allergy.objects.order_by()
+    allergy_high = []
+
+    global find_high  # 알러지 추가할때 레벨2 체크하기전 레벨1이 뭔지 저장
+    find_high = allergy_name
+
+    count = 0
+
+    for allergy in allergy_list:
+        allergy_high.append(allergy.highLevelAllergy)
+
+    if allergy_name not in allergy_high:
+        count = 1
+
+    print(allergy_high)
+
+    a = Allergy.objects.get(allergyName=allergy_name)
+    context = {'allergyName2': a, 'allergy_list2': allergy_list, 'count2': count }
+
+    return render(request, 'FoodAllergy/allergy_regist.html',context)
+
 
 def addMyAllergy(request):
     check = request.POST.getlist('checkAllergy[]')
@@ -149,3 +173,9 @@ def addMyAllergy(request):
                     allergy.save()
 
     return render(request, 'FoodAllergy/allergy_regist.html',context)
+
+
+def deleteMyAllergy(request):
+    allergy_list = Allergy.objects.order_by()
+    context = {'allergy_list': allergy_list}
+    return render(request, 'FoodAllergy/allergy_regist.html', context)
