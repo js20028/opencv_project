@@ -119,7 +119,6 @@ def showLv2(request, allergy_name):
 
 def myShowLv2(request, allergy_name):
     allergy_list = Allergy.objects.order_by()
-    allergy_high = []
 
     global find_high  # 알러지 추가할때 레벨2 체크하기전 레벨1이 뭔지 저장
     find_high = allergy_name
@@ -127,12 +126,10 @@ def myShowLv2(request, allergy_name):
     count = 0
 
     for allergy in allergy_list:
-        allergy_high.append(allergy.highLevelAllergy)
-
-    if allergy_name not in allergy_high:
         count = 1
-
-    print(allergy_high)
+        if allergy_name == allergy.highLevelAllergy and allergy.myAllergy == "Y":
+            count = 0
+            break
 
     a = Allergy.objects.get(allergyName=allergy_name)
     context = {'allergyName2': a, 'allergy_list2': allergy_list, 'count2': count }
