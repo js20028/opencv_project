@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Allergy
+from .models import Allergy, Result
+import datetime
 from django.contrib import messages
 from django.urls import resolve
 # Create your views here.
@@ -8,25 +9,56 @@ from django.urls import resolve
 
 
 def index(request):
-    """
-       pybo 목록 출력
-    """
+
     allergy_list = Allergy.objects.order_by()
 
     context = {'allergy_list': allergy_list}
 
     # messages.add_message(request, messages.ERROR, 'Hello world.')
 
-    return render(request, 'FoodAllergy/allergy_list.html', context)
+    return render(request, 'FoodAllergy/main.html', context)
 
+
+def resultLoad(request):
+
+    result_list = Result.objects.order_by()
+    context = {'result_list': result_list}
+    # messages.add_message(request, messages.ERROR, 'Hello world.')
+
+    return render(request, 'FoodAllergy/result_load.html', context)
+
+def detailResult(request, result_name):
+
+    result_list = Result.objects.order_by()
+    result = Result.objects.get(productName=result_name)
+
+    context = {'result_list': result_list, 'result':result}
+    # messages.add_message(request, messages.ERROR, 'Hello world.')
+
+    return render(request, 'FoodAllergy/result_load.html', context)
+
+
+def resultSave(request):
+    #result_list = Result.objects.order_by()
+    f_productName = request.POST.get('f_productName')
+    f_productContent = request.POST.get('f_productContent')
+    now = datetime.datetime.now()
+
+    a = Result(productName=f_productName, productContent=f_productContent,
+               allergyResult="result111", create_date=now)
+    a.save()
+    # messages.add_message(request, messages.ERROR, 'Hello world.')
+
+    return redirect('FoodAllergy:index')
+
+
+#----------------------------------------------------------------------
 
 def detail(request, allergy_id):
-    """
-    pybo 내용 출력
-    """
+
     allergy = Allergy.objects.get(id=allergy_id)
     context = {'allergy': allergy}
-    return render(request, 'FoodAllergy/allergy_detail.html', context)
+    return render(request, 'FoodAllergy/result_load.html', context)
 
 
 def allergy_register(request):

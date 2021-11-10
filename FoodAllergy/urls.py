@@ -13,4 +13,7 @@ urlpatterns = [
     path('register/myAllergy/<str:allergy_name>/', views.myShowLv2, name='myShowLv2'),
     path('register/addMyAllergy', views.addMyAllergy, name='addMyAllergy'),
     path('register/deleteMyAllergy', views.deleteMyAllergy, name='deleteMyAllergy'),
+    path('resultLoad/', views.resultLoad, name='resultLoad'),
+    path('resultLoad/<str:result_name>', views.detailResult, name='detailResult'),
+    path('resultSave', views.resultSave, name='resultSave'),
 ]

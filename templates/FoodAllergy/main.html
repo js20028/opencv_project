@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+
+<div class="container">
+    <button onClick="location.href='{% url 'FoodAllergy:register' %}'">등록하기</button>
+    <button>도움말</button>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <button>사진찍기</button>
+            <button>사진 불러오기</button><br>
+        </div>
+
+        <div class="col-sm-6">
+            <form action="{% url 'FoodAllergy:resultSave' %}" class="form-inline" style="width:30%" method="post">
+                {% csrf_token %}
+                <input class="form-control" type="text" name="f_productName" id="f_productName" value="asd">
+                <textarea cols="50" rows="10" name="f_productContent" id="f_productContent"></textarea>
+
+                <input type="submit" value="저장">
+                <input type="button" value="불러오기" onClick="location.href='{% url 'FoodAllergy:resultLoad' %}'">
+            </form>
+        </div>
+    </div>
+
+
+
+    <!--{% if messages %}-->
+    <!--<ul class="messages">-->
+    <!--    {% for message in messages %}-->
+    <!--    <li {% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>-->
+    <!--    {% endfor %}-->
+    <!--</ul>-->
+    <!--{% endif %}-->
+
+</div>
+</body>
+</html>

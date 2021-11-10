@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+
+Hello
+{% if result_list %}
+                <ul>
+                    {% for result in result_list %}
+                        <h5><li><a href="{% url 'FoodAllergy:detailResult' result.productName %}">{{ result.productName }}</a></li></h5><br>
+                    {% endfor %}
+                </ul>
+{% else %}
+    <p>알러지가 없습니다.</p>
+{% endif %}
+                <br><br>
+
+{{ result.productName }}<br>
+{{ result.productContent }}<br>
+{{ result.allergyResult }}<br>
+{{ result.create_date }}<br>
+
+</body>
+</html>
