@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image_to_text</title>
+</head>
+
+<body>
+{% load static %}
+<br>
+<img src="{% static 'images/test07.jpg' %}" height="350">
+<br><br>
+
+<form>
+    <input type="button" value="변환하기" onClick="location.href='{% url 'FoodAllergy:chImage' %}'">
+</form>
+
+<br>
+<div id="ttt">{{ text }}</div>
+
+</body>
+</html>

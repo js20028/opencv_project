@@ -1,6 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Allergy, Result
 import datetime
+
+import cv2
+import os
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+import pytesseract
+import numpy as np
+
 from django.contrib import messages
 from django.urls import resolve
 # Create your views here.
@@ -42,10 +52,13 @@ def resultSave(request):
     #result_list = Result.objects.order_by()
     f_productName = request.POST.get('f_productName')
     f_productContent = request.POST.get('f_productContent')
+    f_exist = request.POST.get('f_exist')
     now = datetime.datetime.now()
 
+    f_exist = f_exist.strip().replace("\n", "").replace(" ", "")
+
     a = Result(productName=f_productName, productContent=f_productContent,
-               allergyResult="result111", create_date=now)
+               allergyResult=f_exist, create_date=now)
     a.save()
     # messages.add_message(request, messages.ERROR, 'Hello world.')
 
@@ -239,3 +252,46 @@ def deleteMyAllergy(request):
     context = {'check': check, 'allergy_list': allergy_list}
 
     return render(request, 'FoodAllergy/allergy_regist.html', context)
+
+
+def chImage(request):
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
+    # 이미지 불러오기, Gray 프로세싱
+    # 이미지 전처리
+    image = cv2.imread("C:/projects/mysite/static/images/test07.jpg")
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+    # gray = cv2.medianBlur(gray, ksize = 1)
+
+    def opening(image):
+        kernel = np.ones((1, 1), np.uint8)
+        result = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+        return result
+    gray = opening(gray)
+
+
+    # 글자 프로세싱을 위해 Gray 이미지 임시파일 형태로 저장.
+    filename = "{}.png".format(os.getpid())
+    cv2.imwrite(filename, gray)
+
+    # Simple image to string
+    text = pytesseract.image_to_string(Image.open(filename), lang='kor')
+    arr = text.split('\n')[0:-1]
+    text = '\n'.join(arr)
+    os.remove(filename)
+
+    text = text.strip().replace("\n", "")
+
+    allergy_list = Allergy.objects.order_by()
+    exist_allergy = []
+
+    for allergy in allergy_list:
+        if allergy.myAllergy == "Y":
+            if text.find(allergy.allergyName) != -1:
+                exist_allergy.append(allergy.allergyName)
+
+    text = {'text': text, 'exist_allergy': exist_allergy}
+
+    return render(request, 'FoodAllergy/main.html', text)
