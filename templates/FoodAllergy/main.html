@@ -18,15 +18,21 @@
         <div class="col-sm-5">
             <br><br>
             <div>
-                <img src="{% static 'images/test07.jpg' %}" height="500">
+                <img src="/static/images/{{filename}}" height="500">
             </div>
             <button>사진찍기</button>
-            <button>사진 불러오기</button><br>
+
+            <form action="{% url 'FoodAllergy:uploadfile' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="file">
+                <input type="submit" value="등록">
+            </form>
         </div>
 
         <div class="col-sm-2">
-            <form>
-                <input type="button" value="변환하기" onClick="location.href='{% url 'FoodAllergy:chImage' %}'">
+            <form action="{% url 'FoodAllergy:chImage' %}">
+                {% csrf_token %}
+                <input type="submit" value="변환하기" >
             </form>
         </div>
 
